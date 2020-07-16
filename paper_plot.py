@@ -11,6 +11,9 @@ FIG_LINES = 1
 FIG_STACKS = 2
 FIG_GROUP_BARS = 3
 
+# Bar Patterns
+PRESET_BAR_PATTERNS = ['.', 'o', '*', '\\', '+', 'x', '-', 'O']
+
 # ===================
 #   Direct Builders
 # ===================
@@ -106,6 +109,8 @@ class FigureBuilder:
         self.axe_data_colors = []
         self.axe_line_markers = []
         self.axe_line_styles = []
+        self.axe_edge_colors = []
+        self.axe_bar_hatches = []
         self.vlines = []
 
     def change_figure_type(self, new_type):
@@ -213,6 +218,14 @@ class FigureBuilder:
         self.axe_line_markers = markers
         return self
 
+    def bar_hatches(self, hatches):
+        self.axe_bar_hatches = hatches
+        return self
+
+    def edge_colors(self, edge_colors):
+        self.axe_edge_colors = edge_colors
+        return self
+
     def colors(self, colors):
         self.axe_data_colors = colors
         return self
@@ -271,20 +284,37 @@ class FigureBuilder:
                 x_left = x - width * bar_count / 2 + width / 2
                 bars = []
                 for i in range(len(bar_data)):
-                    if len(self.axe_data_colors) > 0:
-                        bar = axe.bar(x_left + width * i, bar_data[i], width, color=self.axe_data_colors[i])
-                    else:
-                        bar = axe.bar(x_left + width * i, bar_data[i], width)
+                    # Create a set of bars (for the same series)
+                    bar = axe.bar(x_left + width * i, bar_data[i], width)
+
+                    # Change some attributes
+                    for patch in bar.patches:
+                        if len(self.axe_data_colors) > i:
+                            patch.set_facecolor(self.axe_data_colors[i])
+                        if len(self.axe_edge_colors) > i:
+                            patch.set_edgecolor(self.axe_edge_colors[i])
+                        if len(self.axe_bar_hatches) > i:
+                            patch.set_hatch(self.axe_bar_hatches[i])
+                    
                     bars.append(bar)
             elif self.fig_type == FIG_STACKS:
                 x = np.arange(len(bar_data[0]))  # the label locations
                 sums = np.zeros(len(bar_data[0]))
                 bars = []
                 for i in range(len(bar_data)):
-                    if len(self.axe_data_colors) > 0:
-                        bar = axe.bar(x, bar_data[i], width=0.5, bottom=sums, color=self.axe_data_colors[i])
-                    else:
-                        bar = axe.bar(x, bar_data[i], width=0.5, bottom=sums)
+                    
+                    # Create a set of bars (for the same series)
+                    bar = axe.bar(x, bar_data[i], width=0.5, bottom=sums)
+
+                    # Change some attributes
+                    for patch in bar.patches:
+                        if len(self.axe_data_colors) > i:
+                            patch.set_facecolor(self.axe_data_colors[i])
+                        if len(self.axe_edge_colors) > i:
+                            patch.set_edgecolor(self.axe_edge_colors[i])
+                        if len(self.axe_bar_hatches) > i:
+                            patch.set_hatch(self.axe_bar_hatches[i])
+
                     sums += bar_data[i]
                     bars.append(bar)
             
