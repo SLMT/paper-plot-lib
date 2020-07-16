@@ -84,5 +84,3 @@ After having an instance of `FigureBuilder`, you can then apply modifications to
 
 - Call `draw()` to show the results of your plot on Jupyter Notebooks
 - Call `save_as_pdf(filename)` to save the plot as a PDF file. Note that `draw()` must be called before this.
-
-## Lincese

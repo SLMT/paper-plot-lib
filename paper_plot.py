@@ -356,7 +356,7 @@ class FigureBuilder:
         # Legend
         if self.axe_legend_on:
             if self.axe_legend_out:
-                (w, h) = fig.get_size_inches()
+                (_, h) = fig.get_size_inches()
                 up_shfit = (0.75 / h) * (len(self.axe_data_labels) / self.axe_legend_ncol)
                 axe.legend(self.axe_data_labels, loc='upper center', bbox_to_anchor=(0.45, 1 + up_shfit), \
                         prop={'size': self.axe_legend_size}, ncol=self.axe_legend_ncol, frameon=False)
