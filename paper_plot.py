@@ -11,9 +11,6 @@ FIG_LINES = 1
 FIG_STACKS = 2
 FIG_GROUP_BARS = 3
 
-# Bar Patterns
-PRESET_BAR_PATTERNS = ['.', 'o', '*', '\\', '+', 'x', '-', 'O']
-
 # ===================
 #   Direct Builders
 # ===================
