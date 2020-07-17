@@ -6,11 +6,11 @@ A Python library that helps you plot figures that are used on your paper for you
 
 ## Requirements
 
-This library requires the following Python libraries installed in your workspace:
-
-- csv
-- matplotlib
-- numpy
+- Python 3
+- The following Python libraries:
+    - csv
+    - matplotlib
+    - numpy
 
 ## A Quick Example
 
@@ -25,6 +25,8 @@ pt.lines_from_csv('inputs/introduction.csv', figsize=(10, 3)) \
 ```
 
 ![ex1](images/ex1.png)
+
+To see more examples, please see [the example notebook](example.ipynb).
 
 ## APIs
 
