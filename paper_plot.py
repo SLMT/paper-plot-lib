@@ -109,6 +109,7 @@ class FigureBuilder:
         self.axe_edge_colors = []
         self.axe_bar_hatches = []
         self.vlines = []
+        self.hlines = []
 
     def change_figure_type(self, new_type):
         if self.fig_type == FIG_GROUP_BARS and new_type == FIG_STACKS:
@@ -235,6 +236,10 @@ class FigureBuilder:
         self.vlines.append((x, color, linestyle))
         return self
 
+    def add_hline(self, y, color='black', linestyle='-'):
+        self.hlines.append((y, color, linestyle))
+        return self
+
     def draw(self):
         # Create a figure
         if self.fig_size == (-1, -1):
@@ -352,6 +357,11 @@ class FigureBuilder:
         (ymin, ymax) = axe.get_ylim()
         for (x, color, style) in self.vlines:
             axe.vlines(x=x, ymin=ymin, ymax=ymax, color=color, linestyle=style)
+
+        # Add horizontal lines
+        (xmin, xmax) = axe.get_xlim()
+        for (y, color, style) in self.hlines:
+            axe.hlines(y=y, xmin=xmin, xmax=xmax, color=color, linestyle=style)
 
         # Legend
         if self.axe_legend_on:
