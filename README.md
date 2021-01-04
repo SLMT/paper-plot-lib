@@ -2,7 +2,7 @@
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
-A Python library that helps you plot figures that are used on your paper for your experiment results. The library is based on `matplotlib` but provides a way to constrcut plots using builder pattern.
+This library helps you plot figures that are used on a paper for experiment results. It is basically a wrapper around `matplotlib` but provides a way to constrcut plots using [builder pattern](https://en.wikipedia.org/wiki/Builder_pattern).
 
 ## Requirements
 
@@ -17,16 +17,77 @@ A Python library that helps you plot figures that are used on your paper for you
 ```python
 import paper_plot as pt
 
-pt.lines_from_csv('inputs/introduction.csv', figsize=(10, 3)) \
+pt.lines_from_csv('example_data.csv', figsize=(10, 3)) \
     .y_label('Throughput\n(K txs/15 secs)').tick_size(15).label_size(18)\
+    .y_max(60)\
     .line_styles([':', '--', '-']).legend_size(17).legend_out() \
     .legend_ncol(3) \
-    .draw().save_as_pdf('outputs/fig-ex-introduction')
+    .draw().save_as_pdf('fig-example')
 ```
 
 ![ex1](images/ex1.png)
 
-To see more examples, please see [the example notebook](example.ipynb).
+To see more examples, please check [the example notebook](example.ipynb).
+
+## Motivation
+
+This library intends to simplify the API of `matplotlib`. For example, in order to draw the figure shown above. You may need to write the following code with  `matplotlib`.
+
+```python
+import matplotlib.pyplot as plt
+import csv
+
+x_label = ''
+line_labels = []
+x_data = []
+line_data = []
+
+# Read data from a CSV file
+with open('example_data.csv', 'r') as f:
+    for row in csv.reader(f):
+        if x_label == '':
+            x_label = row[0]
+            line_labels = row[1:]
+            for i in range(len(line_labels)):
+                line_data.append([])
+        else:
+            if row[0] == '':
+                continue
+            x_data.append(float(row[0]))
+            for i in range(len(line_labels)):
+                line_data[i].append(float(row[i + 1]))
+
+# Adjust the figure size
+(fig, axe) = plt.subplots(1, 1, figsize=(10, 3))
+
+# Draw lines
+lines = []
+for y in line_data:
+    lines_handle = axe.plot(x_data, y)
+    lines.append(lines_handle[0])
+axe.set_xlim(x_data[0], x_data[-1])
+
+# Change line styles
+line_styles = [':', '--', '-']
+if len(line_styles) > 0:
+    for i in range(len(lines)):
+        lines[i].set_linestyle(line_styles[i])
+
+# Set other stuffs
+axe.set_ylim(top=60)
+axe.set_xlabel(x_label, fontsize=18)
+axe.set_ylabel('Throughput\n(K txs/15 secs)', fontsize=18)
+axe.tick_params(axis='both', which='both', labelsize=15)
+
+# Legend
+axe.legend(line_labels, loc='upper center', bbox_to_anchor=(0.45, 1 + up_shfit), \
+        prop={'size': 18}, ncol=3, frameon=False)
+
+# Output to a PDF file
+fig.savefig('fig-example.pdf', dpi=300, bbox_inches='tight')
+```
+
+But it is much easier to draw the same figure using my wrapping library. 
 
 ## APIs
 
